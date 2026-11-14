@@ -26,13 +26,33 @@ let cleanups = [];
 /* ------------------------------------------------------------------ */
 /* Meta                                                                */
 /* ------------------------------------------------------------------ */
-const DEFAULT_DESC = $('meta[name="description"]').content;
+// Hosts that supply their own <head> (embedded previews) may omit these tags,
+// so find-or-create each one instead of assuming it exists.
+function metaTag(attr, key) {
+  let el = document.head.querySelector(`meta[${attr}="${key}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+  return el;
+}
+const DEFAULT_DESC =
+  metaTag('name', 'description').content ||
+  'MAISON ÉTHER is a contemporary French niche perfume house. A fictional design concept.';
 function setMeta(title, desc = DEFAULT_DESC, ld = null) {
   document.title = title;
-  $('meta[name="description"]').content = desc;
-  $('meta[property="og:title"]').content = title;
-  $('meta[property="og:description"]').content = desc;
-  $('#ld-page').textContent = ld ? JSON.stringify(ld) : '';
+  metaTag('name', 'description').content = desc;
+  metaTag('property', 'og:title').content = title;
+  metaTag('property', 'og:description').content = desc;
+  let ldEl = document.getElementById('ld-page');
+  if (!ldEl) {
+    ldEl = document.createElement('script');
+    ldEl.type = 'application/ld+json';
+    ldEl.id = 'ld-page';
+    document.head.appendChild(ldEl);
+  }
+  ldEl.textContent = ld ? JSON.stringify(ld) : '';
 }
 
 /* ------------------------------------------------------------------ */
@@ -122,10 +142,17 @@ function render() {
       setMeta('Not found — MAISON ÉTHER');
   }
 
-  view.innerHTML = html;
-  view.classList.remove('view--in');
-  void view.offsetWidth; // restart the entrance transition
-  view.classList.add('view--in');
+  // The home page is pre-rendered into index.html (scripts/build.mjs) so content
+  // shows even before this script runs. Reuse that markup on first load instead
+  // of replacing it, which would re-request the hero image.
+  const prerendered = view.hasAttribute('data-prerendered');
+  view.removeAttribute('data-prerendered');
+  if (!(prerendered && r.name === 'home')) {
+    view.innerHTML = html;
+    view.classList.remove('view--in');
+    void view.offsetWidth; // restart the entrance transition
+    view.classList.add('view--in');
+  }
 
   if (r.name === 'home') {
     initHero();
@@ -581,4 +608,5 @@ $$('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 renderCount();
 render();
-requestAnimationFrame(() => document.body.classList.remove('is-loading'));
+window.__maisonReady = true; // tells the inline boot guard in index.html that the app started
+requestAnimationFrame(() => document.documentElement.classList.remove('is-loading'));

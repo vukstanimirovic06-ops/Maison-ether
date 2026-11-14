@@ -8,15 +8,22 @@
 
 ## Run locally
 
-It is a static site with no build step:
+It is a static site. The built files are committed, so any static server works:
 
 ```bash
 npm start            # python3 -m http.server 4173
 # open http://localhost:4173
 ```
 
-Any static server works. The page has to be served over HTTP, not opened as `file://`, because it
-uses ES modules.
+After editing anything in `js/`, run `npm install && npm run build`. That does two things:
+
+- It bundles the ES modules into `js/bundle.js`, a single classic script. Module scripts are fetched
+  with CORS, so they fail in sandboxed previews and from `file://`; a classic script loads everywhere.
+- It pre-renders the home page into `index.html`, so the hero and every section are in the HTML
+  before any script runs.
+
+Entrance animations only hide content once the script is confirmed running. If it hasn't started
+within 2.5 seconds, the page shows everything as-is.
 
 ## Deploy (GitHub Pages)
 
@@ -33,6 +40,8 @@ js/data.js            Catalogue, journal articles and information pages
 js/views.js           View templates (home, product, article, checkout, info) and the responsive image helper
 js/bag.js             Demo bag state, saved to localStorage
 js/app.js             Router, header, dialogs (focus trap, inert), hero slideshow, gallery, forms, reveals
+js/bundle.js          Generated classic-script bundle of js/*.js (npm run build), loaded by index.html
+scripts/build.mjs     Bundles the JS and pre-renders the home page into index.html
 assets/fonts/         Self-hosted Cormorant Garamond and Manrope (latin subset, woff2)
 assets/img/           Responsive WebP placeholders
 scripts/placeholders/ SVG scene library and renderer for the placeholder art
