@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not found — MAISON ÉTHER</title>
+  <meta name="robots" content="noindex">
+  <script>
+    // Static hosts serve this page for unknown paths. The site uses hash routing,
+    // so send visitors back to the site root (project sub-path on GitHub Pages).
+    (function () {
+      var segs = location.pathname.split('/');
+      var base = (location.hostname.slice(-10) === 'github.io' ? segs.slice(0, 2).join('/') : '') + '/';
+      location.replace(base + (location.hash || '#/not-found'));
+    })();
+  </script>
+  <style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f1ebe2;color:#181615;font-family:Georgia,serif}</style>
+</head>
+<body><p><a href="./">Return to MAISON ÉTHER</a></p></body>
+</html>
