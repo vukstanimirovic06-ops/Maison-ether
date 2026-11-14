@@ -60,7 +60,7 @@ function hero() {
 
   const captions = PRODUCTS.map(
     (p, i) => `
-    <a class="hero__caption${i === 0 ? ' is-active' : ''}" href="#/fragrance/${p.slug}" data-caption="${i}" ${i === 0 ? '' : 'tabindex="-1" aria-hidden="true"'}>
+    <a class="hero__caption${i === 0 ? ' is-active' : ''}" href="#fragrance-${p.slug}" data-caption="${i}" ${i === 0 ? '' : 'tabindex="-1" aria-hidden="true"'}>
       <span class="hero__caption-index">N° ${p.index}</span>
       <span class="hero__caption-name">${p.name}</span>
       <span class="hero__caption-notes">${p.notes.join(' · ')}</span>
@@ -100,12 +100,12 @@ function collection() {
     const size = p.sizes.find((s) => s.ml === p.defaultSize);
     return `
     <article class="fragrance" data-reveal>
-      <a class="fragrance__media" href="#/fragrance/${p.slug}" aria-label="${p.name} — view fragrance" tabindex="-1">
+      <a class="fragrance__media" href="#fragrance-${p.slug}" aria-label="${p.name} — view fragrance" tabindex="-1">
         ${img(`product-${p.slug}`, { alt: p.alt[`product-${p.slug}`], sizes: '(max-width: 767px) 84vw, 31vw', cls: 'zoom' })}
       </a>
       <div class="fragrance__body">
         <p class="fragrance__index">N° ${p.index}</p>
-        <h3 class="fragrance__name"><a href="#/fragrance/${p.slug}">${p.name}</a></h3>
+        <h3 class="fragrance__name"><a href="#fragrance-${p.slug}">${p.name}</a></h3>
         <p class="fragrance__line">${p.line}</p>
         <p class="fragrance__notes">${p.notes.join('<span aria-hidden="true"> / </span>')}</p>
         <p class="fragrance__desc">${p.description}</p>
@@ -113,7 +113,7 @@ function collection() {
           <span>${size.ml} ml Eau de Parfum</span>
           <span class="fragrance__price">${formatPrice(size.price)}</span>
         </div>
-        <a class="text-link" href="#/fragrance/${p.slug}">Discover ${p.name} ${arrow}</a>
+        <a class="text-link" href="#fragrance-${p.slug}">Discover ${p.name} ${arrow}</a>
       </div>
     </article>`;
   }).join('');
@@ -190,7 +190,7 @@ function discovery() {
   return `
   <section class="section discovery" id="discovery" aria-labelledby="discovery-title">
     <div class="wrap discovery__grid">
-      <a class="discovery__media" href="#/fragrance/discovery-set" tabindex="-1" aria-hidden="true" data-reveal>
+      <a class="discovery__media" href="#fragrance-discovery-set" tabindex="-1" aria-hidden="true" data-reveal>
         ${img('discovery-set', { alt: DISCOVERY.alt['discovery-set'], sizes: '(max-width: 767px) 100vw, 58vw', cls: 'zoom' })}
       </a>
       <div class="discovery__text" data-reveal>
@@ -202,7 +202,7 @@ function discovery() {
         </ul>
         <div class="discovery__buy">
           <span class="discovery__price">${formatPrice(size.price)} <small>${size.label} Eau de Parfum</small></span>
-          <a class="pill pill--dark" href="#/fragrance/discovery-set">Discover the Set ${arrow}</a>
+          <a class="pill pill--dark" href="#fragrance-discovery-set">Discover the Set ${arrow}</a>
         </div>
       </div>
     </div>
@@ -223,7 +223,7 @@ function journal() {
         ${ARTICLES.map(
           (a) => `
         <article class="entry" data-reveal>
-          <a href="#/journal/${a.slug}" class="entry__link">
+          <a href="#journal-${a.slug}" class="entry__link">
             <div class="entry__media">${img(a.image, { alt: a.alt, sizes: '(max-width: 767px) 100vw, 31vw', cls: 'zoom' })}</div>
             <p class="entry__meta"><span>${a.index}</span><span>${a.category}</span><span>${a.read}</span></p>
             <h3 class="entry__title">${a.title}</h3>
@@ -323,7 +323,7 @@ export function product(p) {
       </div>
 
       <div class="pdp__info">
-        <nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Maison</a><span aria-hidden="true">/</span><a href="#${isSet ? 'discovery' : 'collection'}">${isSet ? 'Discovery Set' : 'Collection'}</a><span aria-hidden="true">/</span><span aria-current="page">${p.name}</span></nav>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="#top">Maison</a><span aria-hidden="true">/</span><a href="#${isSet ? 'discovery' : 'collection'}">${isSet ? 'Discovery Set' : 'Collection'}</a><span aria-hidden="true">/</span><span aria-current="page">${p.name}</span></nav>
         ${isSet ? eyebrow('Three samples · Eau de Parfum') : eyebrow(`N° ${p.index} · ${p.family}`)}
         <h1 class="pdp__title">${p.name}</h1>
         <p class="pdp__line">${p.line}</p>
@@ -364,7 +364,7 @@ export function product(p) {
         </details>
         <details class="pdp__details">
           <summary>Wearing</summary>
-          <p>Apply to warm skin — wrists, throat, behind the ears — and allow the composition time to unfold. <a class="inline-link" href="#/journal/the-ritual-of-fragrance">Read the ritual of fragrance</a>.</p>
+          <p>Apply to warm skin — wrists, throat, behind the ears — and allow the composition time to unfold. <a class="inline-link" href="#journal-the-ritual-of-fragrance">Read the ritual of fragrance</a>.</p>
         </details>
       </div>
     </div>
@@ -377,7 +377,7 @@ export function product(p) {
             .map((o) => {
               const im = o.images[0];
               const s = o.sizes.find((x) => x.ml === o.defaultSize);
-              return `<a class="more__card" href="#/fragrance/${o.slug}">
+              return `<a class="more__card" href="#fragrance-${o.slug}">
                 <div class="more__media">${img(im, { alt: o.alt[im], sizes: '(max-width: 767px) 50vw, 30vw', cls: 'zoom' })}</div>
                 <span class="more__name">${o.name}</span>
                 <span class="more__price">${formatPrice(s.price)}</span>
@@ -399,7 +399,7 @@ export function article(a) {
   return `
   <article class="article">
     <header class="article__head wrap wrap--narrow">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Maison</a><span aria-hidden="true">/</span><a href="#journal">Journal</a></nav>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#top">Maison</a><span aria-hidden="true">/</span><a href="#journal">Journal</a></nav>
       <p class="entry__meta"><span>${a.index}</span><span>${a.category}</span><span>${a.read}</span></p>
       <h1 class="article__title">${a.title}</h1>
       <p class="article__dek">${a.dek}</p>
@@ -410,7 +410,7 @@ export function article(a) {
     </div>
     <footer class="article__foot wrap wrap--narrow">
       <a class="text-link" href="#journal"><span class="arrow" aria-hidden="true">←</span> All journal entries</a>
-      <a class="article__next" href="#/journal/${next.slug}"><span class="eyebrow">Next</span><span>${next.title}</span></a>
+      <a class="article__next" href="#journal-${next.slug}"><span class="eyebrow">Next</span><span>${next.title}</span></a>
     </footer>
   </article>`;
 }
@@ -473,14 +473,14 @@ export function confirmation() {
     ${eyebrow('Demonstration complete')}
     <h1 class="page__title">Thank you for <em>exploring.</em></h1>
     <p>This was a simulated checkout. <strong>No order was placed, no payment was taken</strong>, and the details you entered were not sent anywhere. Your demo bag has been cleared.</p>
-    <p><a class="pill pill--dark" href="#/">Return to the Maison ${arrow}</a></p>
+    <p><a class="pill pill--dark" href="#top">Return to the Maison ${arrow}</a></p>
   </section>`;
 }
 
 export function info(page) {
   return `
   <section class="page wrap wrap--narrow">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Maison</a><span aria-hidden="true">/</span><span aria-current="page">${page.title}</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="#top">Maison</a><span aria-hidden="true">/</span><span aria-current="page">${page.title}</span></nav>
     <h1 class="page__title">${page.title}</h1>
     <div class="prose">${page.body.map((p) => `<p>${p}</p>`).join('')}</div>
   </section>`;
@@ -492,7 +492,7 @@ export function notFound() {
     ${eyebrow('Not found')}
     <h1 class="page__title">This page has <em>vanished.</em></h1>
     <p>Like a fragrance on the air, what you were looking for is no longer here.</p>
-    <p><a class="pill pill--dark" href="#/">Return to the Maison ${arrow}</a></p>
+    <p><a class="pill pill--dark" href="#top">Return to the Maison ${arrow}</a></p>
   </section>`;
 }
 
@@ -511,9 +511,9 @@ export function bagBody(lines) {
     .map((l) => {
       const im = l.product.images[0];
       return `<li class="line" data-line="${l.key}">
-        <a class="line__media" href="#/fragrance/${l.product.slug}" data-bag-close tabindex="-1" aria-hidden="true">${img(im, { alt: '', sizes: '88px' })}</a>
+        <a class="line__media" href="#fragrance-${l.product.slug}" data-bag-close tabindex="-1" aria-hidden="true">${img(im, { alt: '', sizes: '88px' })}</a>
         <div class="line__info">
-          <a class="line__name" href="#/fragrance/${l.product.slug}" data-bag-close>${l.product.name}</a>
+          <a class="line__name" href="#fragrance-${l.product.slug}" data-bag-close>${l.product.name}</a>
           <span class="line__size">${l.size.label || `${l.size.ml} ml`} · Eau de Parfum</span>
           <div class="line__controls">
             <div class="qty qty--sm" role="group" aria-label="Quantity for ${l.product.name}">
@@ -535,6 +535,6 @@ export function bagFoot(lines, total) {
   return `
     <p class="bag__subtotal"><span>Subtotal</span><span>${formatPrice(total)}</span></p>
     <p class="bag__fine">Shipping and taxes calculated at checkout.</p>
-    <a class="pill pill--dark pill--block" href="#/checkout" data-bag-close>Proceed to demo checkout</a>
+    <a class="pill pill--dark pill--block" href="#checkout" data-bag-close>Proceed to demo checkout</a>
     <button type="button" class="pill pill--outline pill--block" data-bag-close>Continue shopping</button>`;
 }

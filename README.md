@@ -21,7 +21,7 @@ uses ES modules.
 ## Deploy (GitHub Pages)
 
 Push to the default branch and turn on **Settings → Pages → Deploy from branch → / (root)**.
-Routing is hash-based (`#/fragrance/sillage`), so refreshing any view works on static hosting.
+Routing uses plain hash names (`#fragrance-sillage`, `#journal-notes-on-light`), so refreshing any view works on static hosting.
 `404.html` sends unknown paths back to the root, and `.nojekyll` stops Jekyll processing.
 
 ## Structure

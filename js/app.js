@@ -1,12 +1,13 @@
 /**
  * MAISON ÉTHER — application shell.
- * Hash-based routing keeps the site fully static (GitHub Pages friendly):
- *   #/                       home
- *   #collection, #story …    home, scrolled to a section
- *   #/fragrance/:slug        product detail
- *   #/journal/:slug          journal article
- *   #/checkout               demonstration checkout
- *   #/info/:page             information pages
+ * Plain-name hash routing keeps the site fully static (GitHub Pages friendly)
+ * and works inside embedded previews that only pass simple "#name" hashes:
+ *   (none) or #top            home
+ *   #collection, #story …     home, scrolled to a section
+ *   #fragrance-<slug>         product detail
+ *   #journal-<slug>           journal article
+ *   #checkout                 demonstration checkout
+ *   #info-<page>              information pages
  */
 import { findItem, findArticle, INFO_PAGES } from './data.js';
 import * as bag from './bag.js';
@@ -38,17 +39,20 @@ function setMeta(title, desc = DEFAULT_DESC, ld = null) {
 /* Router                                                              */
 /* ------------------------------------------------------------------ */
 function parse() {
-  const hash = decodeURIComponent(location.hash || '');
-  if (hash.startsWith('#/')) {
-    const parts = hash.slice(2).split('/').filter(Boolean);
-    return { name: parts[0] || 'home', param: parts[1], section: null };
-  }
-  const section = hash.slice(1);
-  return { name: 'home', section: HOME_SECTIONS.includes(section) ? section : null };
+  let hash = decodeURIComponent(location.hash || '').slice(1);
+  // Legacy "#/fragrance/sillage" style links map onto the plain names.
+  if (hash.startsWith('/')) hash = hash.slice(1).replace('/', '-').replace(/\/$/, '');
+  if (hash === 'main') return { name: 'skip' };
+  if (!hash || HOME_SECTIONS.includes(hash)) return { name: 'home', section: hash || null };
+  const m = hash.match(/^(fragrance|journal|info)-(.+)$/);
+  if (m) return { name: m[1], param: m[2], section: null };
+  if (hash === 'checkout' || hash === 'confirmation') return { name: hash, section: null };
+  return { name: 'notfound', section: null };
 }
 
 function render() {
   const r = parse();
+  if (r.name === 'skip') { $('#main').focus(); return; }
   const key = `${r.name}/${r.param || ''}`;
 
   if (key === currentRoute && r.name === 'home') {
@@ -555,7 +559,7 @@ function initCheckout() {
       return;
     }
     bag.clear();
-    location.hash = '#/confirmation';
+    location.hash = '#confirmation';
   });
 }
 
